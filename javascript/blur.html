@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* Dark, gritty, and gothic styles */
+        body {
+            background-color: #1c1c1c;
+            color: #dcdcdc;
+            font-family: 'Gothic', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1, h2, h3 {
+            color: #ff7f50;
+        }
+
+        a {
+            color: #8a2be2;
+        }
+
+        /* Styles for the blurred background */
+        .blur {
+            filter: blur(5px); /* Adjust the blur amount as needed */
+        }
+
+        /* Styles for the modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7); /* Adjust the transparency as needed */
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #363636; /* Dark background color */
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px; /* Rounded corners */
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #fff;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+    <title>Your Gym Website</title>
+</head>
+<body>
+
+    <!-- Your website content goes here -->
+    <h1>Welcome to Your Gym Website</h1>
+    <p>This is where you can showcase your gym services and features.</p>
+    
+    <!-- More Features Button -->
+    <button id="yourMoreFeaturesButtonId">More Features</button>
+
+    <!-- More Features Modal -->
+    <div class="modal" id="moreFeaturesModal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <p>Get a premium subscription to unlock these features!</p>
+            <a href="#" style="text-decoration: none;">Upgrade Now</a>
+        </div>
+    </div>
+
+    <script>
+        // Function to open the modal and apply the blur effect
+        function openModal() {
+            document.body.classList.add('blur');
+            document.getElementById('moreFeaturesModal').style.display = 'block';
+        }
+
+        // Function to close the modal and remove the blur effect
+        function closeModal() {
+            document.body.classList.remove('blur');
+            document.getElementById('moreFeaturesModal').style.display = 'none';
+        }
+
+        // Attach the openModal function to the click event of your "More Features" button or link
+        document.getElementById('yourMoreFeaturesButtonId').addEventListener('click', openModal);
+    </script>
+</body>
+</html>

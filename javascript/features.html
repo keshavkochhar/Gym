@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gym Website Features</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Blurred Background for Features Page -->
+    <div class="blur">
+        <!-- Your Gym Website Features Content Goes Here -->
+
+        <h1>Explore Premium Gym Features</h1>
+        <p>Unlock exclusive features with our premium subscription!</p>
+
+        <!-- More Features Modal on Features Page -->
+        <div class="modal" id="moreFeaturesModal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <p>You need to buy the premium subscription to unlock these features!</p>
+                <a href="#" style="text-decoration: none;">Upgrade Now</a>
+            </div>
+        </div>
+
+        <!-- More Features Button on Features Page -->
+        <button onclick="openModal()">More Features</button>
+    </div>
+
+    <script>
+        function openModal() {
+            document.body.classList.add('blur');
+            document.getElementById('moreFeaturesModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.body.classList.remove('blur');
+            document.getElementById('moreFeaturesModal').style.display = 'none';
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personalized 7-Day Diet Plan</title>
+    <link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Frank Ruhl Libre', serif;
+            margin: 20px;
+            background-color: #111; /* Dark Background */
+            color: #fff; /* White Text */
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 3.5em; /* Increased font size */
+            color: #b39ddb; /* Light Purple */
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px #7043a5; /* Purple Shadow */
+        }
+
+        label,
+        button {
+            display: block;
+            margin: 20px auto; /* Increased margin */
+            font-size: 1.3em; /* Increased font size */
+            color: #b39ddb; /* Light Purple */
+            text-align: left;
+        }
+
+        input,
+        select,
+        button {
+            font-size: 1.2em; /* Increased font size */
+            padding: 12px; /* Increased padding */
+            border: none;
+            border-radius: 8px;
+            background-color: #333; /* Dark Gray */
+            color: #fff; /* White Text */
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        button {
+            cursor: pointer;
+            background-color: #7043a5; /* Purple */
+            color: #111; /* Dark Background */
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #9966cc; /* Lighter Purple */
+        }
+
+        .find-bmi-button {
+            margin-top: 20px; /* Increased margin */
+            background-color: #7043a5; /* Purple */
+            color: #111; /* Dark Background */
+            cursor: pointer;
+            padding: 12px; /* Increased padding */
+            border-radius: 8px;
+            font-size: 1.2em; /* Increased font size */
+            transition: background-color 0.3s;
+        }
+
+        .find-bmi-button:hover {
+            background-color: #9966cc; /* Lighter Purple */
+        }
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+            background-color: #222; /* Darker Gray */
+            border-radius: 10px;
+            font-size: 1.3em; /* Increased font size */
+        }
+
+        th, td {
+            padding: 15px; /* Increased padding */
+            border-bottom: 1px solid #444; /* Darker Gray border */
+        }
+
+        th {
+            background-color: #7043a5; /* Purple */
+            color: #111; /* Dark Background */
+        }
+
+        section {
+            margin-top: 20px;
+            background-color: #222; /* Darker Gray */
+            padding: 25px; /* Increased padding */
+            border-radius: 10px;
+            font-size: 1.3em; /* Increased font size */
+            cursor: pointer;
+            position: relative;
+            transition: transform 0.3s;
+            animation: fadeIn 1s ease-out;
+        }
+
+        h2 {
+            color: #b39ddb; /* Light Purple */
+            font-size: 1.8em; /* Increased font size */
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            text-align: left;
+        }
+
+        li {
+            margin-bottom: 15px; /* Increased margin */
+        }
+
+        .loading {
+            display: inline-block;
+            margin-top: 15px; /* Increased margin */
+            margin-left: 5px;
+            font-size: 22px; /* Increased font size */
+            animation: bounce 1.5s infinite;
+            color: #b39ddb; /* Light Purple */
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+
+            40% {
+                transform: translateY(-20px);
+            }
+
+            60% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .motivational-message {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #7043a5; /* Purple */
+            padding: 15px; /* Increased padding */
+            border-radius: 8px;
+            font-size: 1.2em; /* Increased font size */
+            color: #111; /* Dark Background */
+            text-shadow: 1px 1px 2px #111; /* Dark Background Shadow */
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        section:hover {
+            transform: scale(1.02);
+        }
+
+        section:hover .motivational-message {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Personalized 7-Day Diet Plan</h1>
+
+    <label for="bmi">Enter your BMI:</label>
+    <input type="number" id="bmi" placeholder="Enter your BMI">
+
+    <button class="find-bmi-button" onclick="findBMI()">Find BMI</button>
+
+    <label for="preference">Select your dietary preference:</label>
+    <select id="preference">
+        <option value="veg">Vegetarian</option>
+        <option value="nonveg">Non-Vegetarian</option>
+        <option value="vegan">Vegan</option>
+    </select>
+
+    <button onclick="generateDiet()">Generate Diet Plan<span class="loading">...</span></button>
+
+    <section id="result"></section>
+  <script>
+    function findBMI() {
+            window.location.href = 'index.html';
+        }
+    function generateDiet() {
+      const bmi = document.getElementById('bmi').value;
+      const preference = document.getElementById('preference').value;
+      const resultContainer = document.getElementById('result');
+
+      resultContainer.innerHTML = '<p class="loading">Generating diet plan...</p>';
+
+setTimeout(() => {
+    let suggestion = '';
+    let dietPlan = '';
+
+    if (bmi < 18.5) {
+        suggestion = 'You are underweight. Include more protein and healthy fats in your diet.';
+        dietPlan = generateUnderweightDiet(bmi, preference);
+    } else if (bmi >= 18.5 && bmi <= 24.9) {
+        suggestion = 'You are in a healthy weight range. Maintain a balanced diet.';
+        dietPlan = generateNormalWeightDiet(bmi, preference);
+    } else {
+        suggestion = 'You are obese. Focus on a calorie-controlled diet with regular exercise.';
+        dietPlan = generateObeseDiet(bmi, preference);
+    }
+
+    resultContainer.innerHTML = `<p>${suggestion}</p>`;
+    resultContainer.innerHTML += dietPlan;
+}, 1500); // Simulating a delay for the loading animation
+}
+
+    function generateUnderweightDiet(bmi, preference) {
+      let plan = `<section>
+                    <h2>Underweight Diet Plan</h2>
+                    <ul>
+                      <li>Day 1: Breakfast - ${getMeal(preference, 'avocado toast with poached eggs')}. Lunch - ${getMeal(preference, 'quinoa salad with mixed greens, chickpeas, and olive oil dressing')}. Dinner - ${getMeal(preference, 'grilled tofu with sweet potato and steamed broccoli')}.</li>
+                      <li>Day 2: Breakfast - ${getMeal(preference, 'Greek yogurt with honey, mixed nuts, and berries')}. Lunch - ${getMeal(preference, 'lentil soup with whole grain roll')}. Dinner - ${getMeal(preference, 'baked fish with quinoa and roasted Brussels sprouts')}.</li>
+                      <li>Day 3: Breakfast - ${getMeal(preference, 'smoothie with spinach, banana, and protein powder')}. Lunch - ${getMeal(preference, 'brown rice with black beans, salsa, guacamole, and mixed vegetables')}. Dinner - ${getMeal(preference, 'stir-fried tofu with mixed vegetables and brown rice')}.</li>
+                      <li>Day 4: Breakfast - ${getMeal(preference, 'whole grain pancakes with almond butter and sliced strawberries')}. Lunch - ${getMeal(preference, 'chickpea salad with tomatoes, cucumbers, and a lemon-tahini dressing')}. Dinner - ${getMeal(preference, 'grilled vegetable and hummus wrap')}.</li>
+                      <li>Day 5: Breakfast - ${getMeal(preference, 'chia seed pudding with almond milk and fresh fruit')}. Lunch - ${getMeal(preference, 'quinoa bowl with roasted vegetables and a tahini drizzle')}. Dinner - ${getMeal(preference, 'vegetable stir-fry with tofu and brown rice')}.</li>
+                      <li>Day 6: Breakfast - ${getMeal(preference, 'vegan protein smoothie with kale, banana, and almond milk')}. Lunch - ${getMeal(preference, 'spinach and chickpea curry with brown rice')}. Dinner - ${getMeal(preference, 'stuffed bell peppers with quinoa and black beans')}.</li>
+                      <li>Day 7: Breakfast - ${getMeal(preference, 'overnight oats with almond milk, chia seeds, and mixed berries')}. Lunch - ${getMeal(preference, 'vegan lentil soup with a side of whole grain bread')}. Dinner - ${getMeal(preference, 'grilled portobello mushrooms with quinoa and asparagus')}.</li>
+                    </ul>
+                  </section>`;
+
+      return plan;
+    }
+
+    function generateNormalWeightDiet(bmi, preference) {
+      let plan = `<section>
+                    <h2>Normal Weight Diet Plan</h2>
+                    <ul>
+                      <li>Day 1: Breakfast - ${getMeal(preference, 'oatmeal with banana slices and almond butter')}. Lunch - ${getMeal(preference, 'quinoa and black bean bowl with assorted vegetables')}. Dinner - ${getMeal(preference, 'baked salmon with quinoa, roasted sweet potatoes, and asparagus')}.</li>
+                      <li>Day 2: Breakfast - ${getMeal(preference, 'whole grain toast with scrambled eggs and sautéed spinach')}. Lunch - ${getMeal(preference, 'chicken or chickpea wrap with whole wheat tortilla and veggies')}. Dinner - ${getMeal(preference, 'grilled shrimp with quinoa and a side of mixed green salad')}.</li>
+                      <li>Day 3: Breakfast - ${getMeal(preference, 'smoothie with mixed berries, kale, and Greek yogurt')}. Lunch - ${getMeal(preference, 'turkey or tofu sandwich on whole grain bread with a side salad')}. Dinner - ${getMeal(preference, 'grilled chicken or tempeh with brown rice and steamed broccoli')}.</li>
+                      <li>Day 4: Breakfast - ${getMeal(preference, 'whole grain bagel with cream cheese, smoked salmon, and capers')}. Lunch - ${getMeal(preference, 'quinoa salad with mixed vegetables, feta cheese, and balsamic vinaigrette')}. Dinner - ${getMeal(preference, 'baked chicken or tempeh with sweet potato and steamed asparagus')}.</li>
+                      <li>Day 5: Breakfast - ${getMeal(preference, 'avocado and tomato omelet with whole grain toast')}. Lunch - ${getMeal(preference, 'lentil and vegetable curry with basmati rice')}. Dinner - ${getMeal(preference, 'teriyaki-glazed salmon or tofu with quinoa and stir-fried vegetables')}.</li>
+                      <li>Day 6: Breakfast - ${getMeal(preference, 'protein smoothie with berries, spinach, and protein powder')}. Lunch - ${getMeal(preference, 'Greek salad with grilled chicken or tofu')}. Dinner - ${getMeal(preference, 'spaghetti with whole grain pasta, tomato sauce, and turkey or plant-based meatballs')}.</li>
+                      <li>Day 7: Breakfast - ${getMeal(preference, 'whole grain waffles with fresh fruit and maple syrup')}. Lunch - ${getMeal(preference, 'chickpea and vegetable stir-fry with brown rice')}. Dinner - ${getMeal(preference, 'grilled portobello mushrooms stuffed with quinoa and vegetables')}.</li>
+                    </ul>
+                  </section>`;
+
+      return plan;
+    }
+
+    function generateObeseDiet(bmi, preference) {
+      let plan = `<section>
+                    <h2>Obese Diet Plan</h2>
+                    <ul>
+                      <li>Day 1: Breakfast - ${getMeal(preference, 'whole grain cereal with skim milk and mixed berries')}. Lunch - ${getMeal(preference, 'grilled chicken or tofu wrap with whole wheat tortilla and lots of vegetables')}. Dinner - ${getMeal(preference, 'baked cod with quinoa, roasted Brussels sprouts, and a side of green salad')}.</li>
+                      <li>Day 2: Breakfast - ${getMeal(preference, 'Greek yogurt with granola and sliced banana')}. Lunch - ${getMeal(preference, 'turkey or tofu and vegetable stir-fry with brown rice')}. Dinner - ${getMeal(preference, 'baked chicken or tempeh with sweet potato and steamed asparagus')}.</li>
+                      <li>Day 3: Breakfast - ${getMeal(preference, 'scrambled eggs with spinach and whole grain toast')}. Lunch - ${getMeal(preference, 'quinoa salad with mixed vegetables and grilled shrimp')}. Dinner - ${getMeal(preference, 'stuffed bell peppers with lean ground turkey or lentils')}.</li>
+                      <li>Day 4: Breakfast - ${getMeal(preference, 'protein smoothie with almond milk, banana, and protein powder')}. Lunch - ${getMeal(preference, 'chicken or chickpea Caesar salad with whole grain croutons')}. Dinner - ${getMeal(preference, 'grilled salmon with quinoa and roasted vegetables')}.</li>
+                      <li>Day 5: Breakfast - ${getMeal(preference, 'cottage cheese with pineapple chunks and whole grain crackers')}. Lunch - ${getMeal(preference, 'turkey or tofu club sandwich on whole grain bread')}. Dinner - ${getMeal(preference, 'baked chicken or tempeh with quinoa and steamed broccoli')}.</li>
+                      <li>Day 6: Breakfast - ${getMeal(preference, 'avocado and tomato omelet with whole grain toast')}. Lunch - ${getMeal(preference, 'lentil soup with a side of whole grain roll')}. Dinner - ${getMeal(preference, 'teriyaki-glazed tofu or chicken with brown rice and stir-fried vegetables')}.</li>
+                      <li>Day 7: Breakfast - ${getMeal(preference, 'whole grain bagel with cream cheese, smoked salmon, and capers')}. Lunch - ${getMeal(preference, 'grilled shrimp or tofu skewers with quinoa and a side of mixed greens')}. Dinner - ${getMeal(preference, 'turkey or plant-based burger with whole grain bun, sweet potato fries, and a side salad')}.</li>
+                    </ul>
+                  </section>`;
+
+      return plan;
+    }
+
+    function getMeal(preference, meal) {
+      switch (preference) {
+        case 'veg':
+          return meal.replace(/(poached eggs|baked fish|grilled chicken|turkey|scrambled eggs|chicken|fish|shrimp|grilled salmon|chicken or tempeh|chicken or chickpea|turkey or tofu|chicken or tofu|turkey or tofu)/g, 'tofu');
+        case 'nonveg':
+          return meal.replace(/(tofu)/g, 'chicken');
+        case 'vegan':
+          return meal.replace(/(poached eggs|Greek yogurt|honey|eggs|yogurt|scrambled eggs|fish|chicken|turkey|shrimp|salmon|baked chicken|smoothie with mixed berries, kale, and Greek yogurt|Greek salad with grilled chicken|cottage cheese)/g, 'vegan alternatives');
+        default:
+          return meal;
+      }
+    }
+  </script>
+</body>
+</html>

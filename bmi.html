@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Personalized Workout Plan</title>
+  <style>
+    body {
+      font-family: 'Gothic', sans-serif;
+      background-color: #111;
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    #workout-form {
+      background-color: rgba(0, 0, 0, 0.8);
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      width: 100%;
+      max-width: 600px;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    #workout-form:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+    }
+
+    h2 {
+      color: #fff;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin: 15px 0 5px;
+      color: #aaa;
+      text-align: left;
+    }
+
+    select,
+    input[type="number"],
+    range {
+      width: calc(100% - 20px);
+      padding: 12px;
+      margin-bottom: 15px;
+      box-sizing: border-box;
+      border: 1px solid #666;
+      border-radius: 5px;
+      color: #fff;
+      font-size: 16px;
+      background-color: #444;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    select:hover,
+    input[type="number"]:hover,
+    range:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    }
+
+    button {
+      background-color: #4caf50;
+      color: #fff;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 15px;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    button:hover {
+      background-color: #45a049;
+      transform: scale(1.05);
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    }
+
+    #workout-plan {
+      margin-top: 30px;
+      text-align: left;
+      color: #fff;
+    }
+
+    #exercise-images {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 20px;
+    }
+
+    .exercise-image {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 5px;
+      margin: 5px;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .exercise-image:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    }
+  </style>
+</head>
+
+<body>
+  <div id="workout-form">
+    <h2>Create Your Personalized Workout Plan</h2>
+    <label for="fitness-goal">Fitness Goal:</label>
+    <select id="fitness-goal">
+      <option value="strength">Strength</option>
+      <option value="weight-loss">Weight Loss</option>
+      <option value="endurance">Endurance</option>
+    </select>
+
+    <label for="fitness-level">Fitness Level:</label>
+    <select id="fitness-level">
+      <option value="beginner">Beginner</option>
+      <option value="intermediate">Intermediate</option>
+      <option value="advanced">Advanced</option>
+    </select>
+
+    <label for="bmi">BMI:</label>
+    <input type="number" id="bmi" placeholder="Enter your BMI">
+
+    <label for="workout-duration">Workout Duration (minutes):</label>
+    <input type="range" id="workout-duration" min="10" max="120" step="5" value="30">
+    <span id="duration-label">30 minutes</span>
+
+    <button onclick="generateWorkoutPlan()">Generate Workout Plan</button>
+
+    <div id="workout-plan"></div>
+
+    <div id="exercise-images">
+      <img class="exercise-image" src="how-arnold-built-his-shoulders-and-arms-header-830x467.jpg" alt="Exercise 1">
+      <img class="exercise-image" src="Ronnie-Coleman-Profile.jpg" alt="Exercise 2">
+      <img class="exercise-image" src="cbum.jpg" alt="Exercise 3">
+    </div>
+  </div>
+
+  <script>
+    function generateWorkoutPlan() {
+      var fitnessGoal = document.getElementById('fitness-goal').value;
+      var fitnessLevel = document.getElementById('fitness-level').value;
+      var workoutDuration = document.getElementById('workout-duration').value;
+      var bmi = parseFloat(document.getElementById('bmi').value);
+
+      if (isNaN(bmi) || bmi <= 0) {
+        alert("Please enter a valid BMI.");
+        return;
+      }
+
+      var workoutPlan = "Your Personalized Workout Plan:\n";
+
+      workoutPlan += `- Goal: ${fitnessGoal}\n`;
+      workoutPlan += `- Fitness Level: ${fitnessLevel}\n`;
+      workoutPlan += `- Workout Duration: ${workoutDuration} minutes\n`;
+
+      if (fitnessGoal === 'strength') {
+        workoutPlan += "- Strength Training: Customize based on your preferences\n";
+      } else if (fitnessGoal === 'weight-loss') {
+        workoutPlan += "- Cardio Workout: 30 minutes of high-intensity interval training (HIIT)\n";
+        workoutPlan += "- Strength Training: Full body workout, 3 sets of 10 reps\n";
+      } else if (fitnessGoal === 'endurance') {
+        workoutPlan += "- Endurance Workout: Long-distance run or cycling\n";
+      }
+
+      // Adjust workout plan based on BMI
+      if (bmi < 18.5) {
+        workoutPlan += "- Nutritional advice: Consider increasing calorie intake for healthy weight gain.\n";
+      } else if (bmi >= 25) {
+        workoutPlan += "- Nutritional advice: Consider managing calorie intake for weight management.\n";
+      }
+
+      document.getElementById('workout-plan').innerText = workoutPlan;
+    }
+
+    // Update the workout duration label dynamically
+    document.getElementById('workout-duration').addEventListener('input', function () {
+      document.getElementById('duration-label').innerText = this.value + " minutes";
+    });
+  </script>
+</body>
+
+</html>

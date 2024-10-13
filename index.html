@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMI Calculator</title>
+    <style>
+        body {
+            font-family: 'Gothic', sans-serif;
+            background-color: #111;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #calculator {
+            background-color: rgba(0, 0, 0, 0.9);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+            text-align: center;
+            color: #eee;
+        }
+
+        h1 {
+            color: #ff6347;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0;
+            color: #ddd;
+            font-size: 1.2em;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+            border: 2px solid #ff6347;
+            border-radius: 8px;
+            color: #555;
+            background-color: #fff; /* Set background color to white */
+            font-size: 1em;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2em;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #result {
+            margin-top: 30px;
+            font-weight: bold;
+            font-size: 1.3em;
+        }
+
+        #progress-bar-container {
+            position: relative;
+            width: 100%;
+            height: 20px;
+            margin-top: 20px;
+            background-color: #333;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        #progress-pin {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            width: 10px;
+            background-color: #ff6347;
+            border-radius: 50%;
+            animation: movePin 4s ease-in-out infinite alternate; /* Adjust the duration and easing as needed */
+            animation-play-state: running;
+        }
+
+        .animation-complete {
+            animation: none !important;
+        }
+
+        .animation-paused {
+            animation-play-state: paused;
+        }
+
+        @keyframes movePin {
+            0%, 100% {
+                left: 0;
+            }
+            50% {
+                left: 100%;
+            }
+        }
+
+        /* Custom modal styles */
+        #myModal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #333;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 60%;
+            border-radius: 10px;
+            color: #eee;
+            text-align: center;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        /* New popup styles */
+        .popup-message {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: #ff6347;
+        }
+
+        .popup-description {
+            font-size: 1.2em;
+            color: #eee;
+        }
+
+        .popup-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="calculator">
+        <h1>BMI Calculator</h1>
+        <label for="age">Age:</label>
+        <input type="number" id="age" placeholder="Enter age">
+
+        <label for="gender">Gender:</label>
+        <select id="gender">
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+        </select>
+
+        <label for="height">Height:</label>
+        <select id="height-unit">
+            <option value="cm">Centimeters</option>
+            <option value="ft">Feet</option>
+        </select>
+        <input type="number" id="height" placeholder="Enter height">
+
+        <label for="weight">Weight:</label>
+        <select id="weight-unit">
+            <option value="kg">Kilograms</option>
+            <option value="lb">Pounds</option>
+        </select>
+        <input type="number" id="weight" placeholder="Enter weight">
+
+        <button onclick="calculateBMI()">Generate BMI</button>
+
+        <div id="progress-bar-container">
+            <div id="progress-pin"></div>
+        </div>
+
+        <div id="result"></div>
+    </div>
+
+    <!-- The Modal -->
+    <div id="myModal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div id="modal-content"></div>
+        </div>
+    </div>
+
+    <script>
+        function calculateBMI() {
+            var age = parseInt(document.getElementById('age').value);
+            var gender = document.getElementById('gender').value;
+            var height = parseFloat(document.getElementById('height').value);
+            var weight = parseFloat(document.getElementById('weight').value);
+
+            var heightUnit = document.getElementById('height-unit').value;
+            var weightUnit = document.getElementById('weight-unit').value;
+
+            if (isNaN(age) || isNaN(height) || isNaN(weight) || age <= 0 || height <= 0 || weight <= 0) {
+                document.getElementById('result').innerText = "Please enter valid values for age, height, and weight.";
+                return;
+            }
+
+            if (heightUnit === 'ft') {
+                height = height * 30.48; // convert feet to cm
+            }
+
+            if (weightUnit === 'lb') {
+                weight = weight * 0.453592; // convert pounds to kg
+            }
+
+            var bmi = weight / Math.pow(height / 100, 2);
+
+            var bmiCategory = getBMICategory(bmi, age, gender);
+
+            document.getElementById('result').innerText = `Your BMI is ${bmi.toFixed(2)} (${bmiCategory}).`;
+
+            // Trigger the BMI animation
+            animateBMI(bmiCategory);
+
+            // Display the appropriate modal content
+            switch (bmiCategory) {
+                case "Normal weight":
+                    openModal("Don't get overwhelmed; you can always look better with regular discipline and workout.", 'cat.png');
+                    break;
+                case "Obese":
+                    openModal("Eat less and start working on yourself.", 'cat.png');
+                    break;
+                case "Underweight":
+                    openModal("Eat more or you are always gonna look like a skeleton.", 'cat.png');
+                    break;
+                default:
+                    openModal("BMI calculation complete.");
+            }
+        }
+
+        function animateBMI(bmiCategory) {
+            var pin = document.getElementById('progress-pin');
+            var progressBar = document.getElementById('progress-bar-container');
+            var progressBarWidth = progressBar.offsetWidth;
+
+            // Reset animation class to restart the animation
+            pin.classList.remove('animation-complete', 'animation-paused');
+
+            switch (bmiCategory) {
+                case "Underweight":
+                    pin.style.left = '0';
+                    break;
+                case "Normal weight":
+                    pin.style.left = `${progressBarWidth / 2 - pin.offsetWidth / 2}px`;
+                    break;
+                case "Overweight":
+                    pin.style.left = `${progressBarWidth / 2}px`;
+                    break;
+                case "Obese":
+                    pin.style.left = `${progressBarWidth - pin.offsetWidth}px`;
+                    break;
+                default:
+                    pin.style.left = '0';
+            }
+
+            // Pause the animation after completion
+            pin.addEventListener('animationiteration', function () {
+                pin.classList.add('animation-complete');
+                pin.classList.add('animation-paused');
+            }, { once: true });
+        }
+
+        function getBMICategory(bmi, age, gender) {
+            if (age < 18) {
+                return "BMI categories for children and teens may differ. Consult with a healthcare professional.";
+            }
+
+            if (gender === 'male') {
+                if (bmi < 18.5) {
+                    return "Underweight";
+                } else if (bmi < 24.9) {
+                    return "Normal weight";
+                } else if (bmi < 29.9) {
+                    return "Overweight";
+                } else {
+                    return "Obese";
+                }
+            } else if (gender === 'female') {
+                if (bmi < 18.5) {
+                    return "Underweight";
+                } else if (bmi < 24.9) {
+                    return "Normal weight";
+                } else if (bmi < 29.9) {
+                    return "Overweight";
+                } else {
+                    return "Obese";
+                }
+            } else {
+                return "BMI categories for other genders may differ. Consult with a healthcare professional.";
+            }
+        }
+
+        function openModal(content, image) {
+            var modalContent = document.getElementById('modal-content');
+            modalContent.innerHTML = `
+                <span class="close" onclick="closeModal()">&times;</span>
+                <div class="popup-message">${content}</div>
+                <img class="popup-image" src="${image}" alt="Popup Image">
+            `;
+            document.getElementById('myModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('myModal').style.display = 'none';
+        }
+    </script>
+</body>
+
+</html>
